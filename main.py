@@ -51,7 +51,7 @@ class CFD:
                 else if u < 0 and v < 0:
                     vy_after[i][j] = vy[i][j] - u*(vy[i + 1][j] - vy[i][j])*delta_t - v * (vy[i][j + 1] - vy[i][j]) * delta_t
 
-        return vx, vx_after, 8*(WX+1)*WY, vy, vy_after, 8*WX*(WY+1)
+        return
 
     #粘性
     def Viscosity(self):
@@ -59,7 +59,7 @@ class CFD:
             for  j in range(WY-2):
                 vx_after[i][j] = vx.[i][j] -1 / Re * (vx[i + 1][j] + vx[i][j + 1] + vx[i - 1][j] + vx[i][j - 1])*delta_t
                 vy_after[i][j] = vy.[i][j] -1 / Re * (vy[i + 1][j] + vy[i][j + 1] + vy[i - 1][j] + vy[i][j - 1])*delta_t
-        return vx, vx_after, 8*(WX+1)*WY, vy, vyafter, 8*WX*(WY+1)
+        return
 
     # 壁の設定
     def Set(self):
@@ -105,11 +105,41 @@ class CFD:
         return
 
 # メッシュの作成
-def AddMesh
+def AddMesh():
+    mesh = Rhino.Geometry.Mesh()
+    # メッシュの頂点
+    mesh.Vertices.Add(0.0, 0.0, 1.0) #0
+    mesh.Vertices.Add(1.0, 0.0, 1.0) #1
+    mesh.Vertices.Add(2.0, 0.0, 1.0) #2
+    mesh.Vertices.Add(3.0, 0.0, 0.0) #3
+    mesh.Vertices.Add(0.0, 1.0, 1.0) #4
+    mesh.Vertices.Add(1.0, 1.0, 2.0) #5
+    mesh.Vertices.Add(2.0, 1.0, 1.0) #6
+    mesh.Vertices.Add(3.0, 1.0, 0.0) #7
+    mesh.Vertices.Add(0.0, 2.0, 1.0) #8
+    mesh.Vertices.Add(1.0, 2.0, 1.0) #9
+    mesh.Vertices.Add(2.0, 2.0, 1.0) #10
+    mesh.Vertices.Add(3.0, 2.0, 1.0) #11
+    # メッシュのフェイスの作成
+    mesh.Faces.AddFace(0, 1, 5, 4)
+    mesh.Faces.AddFace(1, 2, 6, 5)
+    mesh.Faces.AddFace(2, 3, 7, 6)
+    mesh.Faces.AddFace(4, 5, 9, 8)
+    mesh.Faces.AddFace(5, 6, 10, 9)
+    mesh.Faces.AddFace(6, 7, 11, 10)
+    # メッシュの法線を作成
+    mesh.Normals.ComputeNormals()
+    # メッシュの結合
+    mesh.Compact()
+
+    return mesh
+
 
 def main():
-    # mesh = AddMesh()
-    while 0:
+    step = 1024
+
+    while step == 0:
+        step--
         cfd = CFD()
         cfd.Adve()
         cfd.Viscosity()
@@ -119,8 +149,8 @@ def main():
         cfd.Rhs()
 
 
-
-
-if __name__ == '__main__()':
+if __name__ == '__main__':
     main()
 
+cfd = CFD
+mesh = AddMesh()
