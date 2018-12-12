@@ -1,3 +1,9 @@
+import Rhino
+import scriptcontext
+import System.Guid
+import rhinoscriptsyntax as rs
+
+
 class CFD:
 
     def __init__(self, WX, WY, delta_t, Re, omega):
@@ -100,24 +106,47 @@ class CFD:
                 self.vy[i][j] -= (self.p[i][j] - self.p[i][j - 1]) * self.delta_t
         return
 
+# メッシュの作成
+# def AddMesh():
+#     mesh = Rhino.Geometry.Mesh()
+#     # メッシュの頂点
+#     mesh.Vertices.Add(0.0, 0.0, 1.0) #0
+#     mesh.Vertices.Add(1.0, 0.0, 1.0) #1
+#     mesh.Vertices.Add(2.0, 0.0, 1.0) #2
+#     mesh.Vertices.Add(3.0, 0.0, 0.0) #3
+#     mesh.Vertices.Add(0.0, 1.0, 1.0) #4
+#     mesh.Vertices.Add(1.0, 1.0, 2.0) #5
+#     mesh.Vertices.Add(2.0, 1.0, 1.0) #6
+#     mesh.Vertices.Add(3.0, 1.0, 0.0) #7
+#     mesh.Vertices.Add(0.0, 2.0, 1.0) #8
+#     mesh.Vertices.Add(1.0, 2.0, 1.0) #9
+#     mesh.Vertices.Add(2.0, 2.0, 1.0) #10
+#     mesh.Vertices.Add(3.0, 2.0, 1.0) #11
+#     # メッシュのフェイスの作成
+#     mesh.Faces.AddFace(0, 1, 5, 4)
+#     mesh.Faces.AddFace(1, 2, 6, 5)
+#     mesh.Faces.AddFace(2, 3, 7, 6)
+#     mesh.Faces.AddFace(4, 5, 9, 8)
+#     mesh.Faces.AddFace(5, 6, 10, 9)
+#     mesh.Faces.AddFace(6, 7, 11, 10)
+#     # メッシュの法線を作成
+#     mesh.Normals.ComputeNormals()
+#     # メッシュの結合
+#     mesh.Compact()
+
+#     return mesh
+
 def main():
-    # コンストラクタ
     cfd = CFD(12, 12, 0.2, 10000, 1.8)
-
-    # 1024回回す
     for i in range(1024):
-
-        # 風の発生地点
-        cfd.vx[4][3] = 1
         cfd.Adve()
         cfd.Viscosity()
         cfd.Set()
         cfd.Div()
         cfd.Poisson()
         cfd.Rhs()
-    print(cfd.vx)
-    print(cfd.vy)
 
 
 if __name__ == '__main__':
     main()
+
