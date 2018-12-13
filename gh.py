@@ -136,17 +136,23 @@ class CFD:
 
 #     return mesh
 
-def main():
-    cfd = CFD(12, 12, 0.2, 10000, 1.8)
-    for i in range(1024):
-        cfd.Adve()
-        cfd.Viscosity()
-        cfd.Set()
-        cfd.Div()
-        cfd.Poisson()
-        cfd.Rhs()
+# サーフェスを取得し、その範囲をシミュ範囲とする
+# rec：サーフェス範囲
+# div：分割単位（単位はRhinocerosのスケールに準拠）
+domainU = int(round(rs.SurfaceDomain(rec, 0)[1]/div))
+domainV = int(round(rs.SurfaceDomain(rec, 1)[1]/div))
 
+# コンストラクタをシミュ範囲で定義する
+# dt：ステップ間隔
+# Re：レイノルズ定数
+# omega；加速度
+cfd = CFD(domainU, domainV, dt, Re, omega)
 
-if __name__ == '__main__':
-    main()
-
+# step回シミュレーションを回す
+for i in range(1024):
+    cfd.Adve()
+    cfd.Viscosity()
+    cfd.Set()
+    cfd.Div()
+    cfd.Poisson()
+    cfd.Rhs()
