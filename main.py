@@ -7,14 +7,25 @@ class CFD:
         self.vx_after = [[0] * (self.WX+1) for i in range(self.WY)]
         self.vy = [[0] * self.WX for i in range(self.WY+1)]
         self.vy_after = [[0] * self.WX for i in range(self.WY+1)]
-        self.s = [[0] * self.WX for i in range(self.WY)]
-
         self.p = [[0] * self.WX for i in range(self.WY)]
         self.p_after = [[0] * self.WX for i in range(self.WY)]
+        self.s = [[0] * self.WX for i in range(self.WY)]
+
         self.rys =  [[0] * 1024 for i in range(2)]
         self.delta_t = delta_t                                  #デルタT
+        self.delta=x = delta_x
+        self.delta_y = delta_y
         self.Re = Re                                   #レイノルズ数
         self.omega = omega                                      #加速係数
+    
+    #時間ステップ数の計算
+    def deltaT(self, delta_x, delta_y, u, v):
+        minx = 0.2 * (delta_x / u)
+        miny = 0.2 * (delta_y / v)
+        if minx >= miny:
+            return minx
+        else:
+            return miny
 
     #移流
     def Adve(self):
@@ -105,18 +116,18 @@ def main():
     cfd = CFD(12, 18, 0.2, 10000, 1.8)
 
     # 1024回回す
-    for i in range(1024):
+    # for i in range(1024):
 
-        # 風の発生地点
-        cfd.vx[4][3] = 1
-        cfd.Adve()
-        cfd.Viscosity()
-        cfd.Set()
-        cfd.Div()
-        cfd.Poisson()
-        cfd.Rhs()
-    print(cfd.vx)
-    print(cfd.vy)
+    #     # 風の発生地点
+    #     cfd.vx[4][3] = 1
+    #     cfd.Adve()
+    #     cfd.Viscosity()
+    #     cfd.Set()
+    #     cfd.Div()
+    #     cfd.Poisson()
+    #     cfd.Rhs()
+    # print(cfd.vx)
+    # print(cfd.vy)
 
 
 if __name__ == '__main__':
